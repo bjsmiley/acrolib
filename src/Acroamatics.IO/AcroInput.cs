@@ -64,7 +64,7 @@ namespace Acroamatics.IO
 		{
 			FlushResult result;
 
-			foreach (var context in options.BufferCollection)
+			foreach (var context in buffers)
 			{
 				result = await nextBufferAsync(context, stoppingToken);
 
@@ -112,14 +112,13 @@ namespace Acroamatics.IO
 
 			// adjustments to the wait time are made below
 
-
 			if (context.Attempts > context.AcceptableMaxAttempts)
 			{
 				// WaitTime is too small, need to increment it (frequency is too fast - slow it down)
 
 				if(context.PreviousWaitTime == WaitTimeState.TooSmall)
 				{
-					// the previous buffer was too slow as well, so increment the wait time by alot
+					// the previous buffer read was too fast as well, so increment the wait time by alot
 					context.WaitTime *= 2;
 				}
 				else
@@ -137,7 +136,7 @@ namespace Acroamatics.IO
 
 				if (context.PreviousWaitTime == WaitTimeState.TooLarge)
 				{
-					// the previous buffer was too fast as well, so decrement the wait time by alot
+					// the previous buffer read was too slow as well, so decrement the wait time by alot
 					context.WaitTime /= 2;
 				}
 				else
