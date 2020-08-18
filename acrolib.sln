@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Acroamatics.IO", "src\Acroa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Acroamatics.IO.Example", "example\Acroamatics.IO.Example\Acroamatics.IO.Example.csproj", "{EC802E58-AF09-47F4-8FE8-321C7201CE8F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Acroamatics.IO.Polling", "src\Acroamatics.IO.Polling\Acroamatics.IO.Polling.csproj", "{9BCA36AF-4AAD-483B-977F-2C97ADB1E795}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,10 +21,6 @@ Global
 		{EC802E58-AF09-47F4-8FE8-321C7201CE8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EC802E58-AF09-47F4-8FE8-321C7201CE8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EC802E58-AF09-47F4-8FE8-321C7201CE8F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9BCA36AF-4AAD-483B-977F-2C97ADB1E795}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9BCA36AF-4AAD-483B-977F-2C97ADB1E795}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9BCA36AF-4AAD-483B-977F-2C97ADB1E795}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9BCA36AF-4AAD-483B-977F-2C97ADB1E795}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

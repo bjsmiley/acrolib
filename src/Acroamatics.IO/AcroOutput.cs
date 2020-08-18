@@ -15,25 +15,25 @@ namespace Acroamatics.IO
 
 		public ChannelWriter<OutputContext> Writer { get; }
 
-		public ArrayPool<byte> Pool
+		public ArrayPool<uint> Pool
 		{
 			get
 			{
 
-				return pool ?? throw new NotSupportedException("Acroamatics Client Output was not configured with MemoryPool support.");
+				return pool ?? throw new NotSupportedException("Acroamatics Client Output was not configured with ArrayPool support.");
 			}
 		}
 
 		private readonly AcroOutputOptions options;
 		private readonly Channel<OutputContext> channel;
-		private readonly ArrayPool<byte> pool;
+		private readonly ArrayPool<uint> pool;
 
 		public AcroOutput(AcroOutputOptions options)
 		{
 			this.options = options;
 			channel = Channel.CreateUnbounded<OutputContext>(this.options.ChannelOptions);
 			Writer = channel.Writer;
-			if (options.UseArrayPool) pool = ArrayPool<byte>.Shared;
+			if (options.UseArrayPool) pool = ArrayPool<uint>.Shared;
 		}
 
 		public AcroOutput() : this(new AcroOutputOptions()) { }
@@ -66,6 +66,6 @@ namespace Acroamatics.IO
 
 		// Acro API function to write buffers to memory CVT
 		[DllImport("libio")]
-		private static extern void vmewblock(byte[] buffer, uint startingAddress, int length);
+		private static extern void vmewblock(uint[] buffer, uint startingAddress, int length);
 	}
 }

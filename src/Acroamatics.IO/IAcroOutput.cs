@@ -9,6 +9,6 @@ namespace Acroamatics.IO
 	public interface IAcroOutput
 	{
 		public ChannelWriter<OutputContext> Writer { get; }
-		public ArrayPool<byte> Pool { get; }
+		public ArrayPool<uint> Pool { get; }
 	}
 }
