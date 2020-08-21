@@ -12,8 +12,10 @@ namespace Acroamatics.IO.Example
 	public class Service : BackgroundService
 	{
 		private readonly IAcroClient client;
+		private readonly byte[] packetHeaders = new byte[] { 0x69, 0x42, 0xFA, 0x00, 0x01, 0x03 };
 
 		private int found = 0;
+		private byte[] intermBuffer = new byte[32]; // pretending all packets are 32 bytes long
 
 		public Service(IAcroClient client)
 		{
@@ -21,8 +23,6 @@ namespace Acroamatics.IO.Example
 		}
 		protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 		{
-			var packet = new byte[32]; // pretending all packets are 32 bytes long
-
 			while(!stoppingToken.IsCancellationRequested)
 			{
 				try
@@ -31,32 +31,32 @@ namespace Acroamatics.IO.Example
 
 					var buffer = result.Buffer;
 
-					var position = readItems(buffer, packet);
+					var position = readItems(buffer);
 
 					if (result.IsCompleted) 
 						break;
 
 					client.In.Reader.AdvanceTo(position, buffer.End);
-			
 				}
 				catch(OperationCanceledException)
 				{
 					break;
 				}
-				
 			}
 		}
 
-		private SequencePosition readItems(ReadOnlySequence<byte> sequence, byte[] packet)
+		private SequencePosition readItems(ReadOnlySequence<byte> sequence)
 		{
 			var reader = new SequenceReader<byte>(sequence);
 
 			while(!reader.End)
 			{
-				var isFound = reader.TryAdvanceToAny(new byte[] { 0x69, 0x42, 0xFA, 0x00,0x01,0x03 }, false);
+				var isFound = reader.TryAdvanceToAny(packetHeaders, advancePastDelimiter: false);
 
 				if (!isFound)
+				{
 					break;
+				}
 				
 				if(reader.Remaining >= 32)
 				{
@@ -66,9 +66,9 @@ namespace Acroamatics.IO.Example
 
 					reader.Advance(32);
 
-					packetSequence.CopyTo(packet);
+					packetSequence.CopyTo(intermBuffer);
 
-					writeBack(packet).AsTask().Wait();
+					writeBack(intermBuffer);
 				}
 				else
 				{
@@ -79,7 +79,7 @@ namespace Acroamatics.IO.Example
 			return reader.Position;
 		}
 
-		private ValueTask writeBack(byte[] packet)
+		private void writeBack(byte[] packet)
 		{
 			var writablePacket = MemoryMarshal.Cast<byte, uint>(packet);
 
@@ -91,7 +91,8 @@ namespace Acroamatics.IO.Example
 				Length = 10,
 				Buffer = writablePacket.ToArray()
 			};
-			return client.Out.Writer.WriteAsync(ctx);
+
+			client.Out.Writer.WriteAsync(ctx);
 		}
 	}
 }
